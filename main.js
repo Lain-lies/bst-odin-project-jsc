@@ -58,7 +58,7 @@ class Tree {
       if (this.root === null) return null;
 
       let smaller;
-
+      if(newNode.data === currentNode.data) return null;
       newNode.data < currentNode.data ? (smaller = true) : (smaller = false);
 
       if (smaller) {
@@ -88,5 +88,5 @@ const tree = new Tree();
 
 tree.buildTree(numbers);
 prettyPrint(tree.getRoot());
-tree.insert(19);
+tree.insert(20);
 prettyPrint(tree.getRoot());
