@@ -1,5 +1,4 @@
 const print = console.log;
-
 const prettyPrint = (node, prefix = "", isLeft = true) => {
   if (node === null) {
     return;
@@ -84,7 +83,7 @@ class Tree {
     let smaller;
     let flag = true;
 
-    if(value === cursor.data){
+    if (value === cursor.data) {
       flag = false;
       smaller = null;
     }
@@ -120,7 +119,7 @@ class Tree {
       case 1:
         this.oneChildDeleteHelper(cursor, node, smaller);
         break;
-      
+
       case 2:
         this.twoChildDeleteHelper(cursor, node, smaller);
         break;
@@ -157,51 +156,45 @@ class Tree {
     return;
   }
 
-  twoChildDeleteHelper(cursor, node, smaller){
+  twoChildDeleteHelper(parent, nodeForDeletion, smaller) {
     print("two child helper");
-    let currentNode = node.right;
-    
-    if(this.isLeaf(currentNode)){
-      currentNode.left = node.left;
+    let rightNode = nodeForDeletion.right;
+
+    if (this.isLeaf(rightNode)) {
+
+      rightNode.left = nodeForDeletion.left;
 
       if(smaller === true)
-        cursor.left = chosenNode;
+        parent.left = rightNode;
       else if(smaller === false)
-        cursor.right = chosenNode;
+        parent.right = rightNode
       else
-        this.root = chosenNode;
-  
+        this.root = rightNode
+      
       return;
     }
-    
-    while(true){
 
-      if(currentNode.left.left === null)
-        break;
-      
+    while (true) {
+      if (currentNode.left.left === null) break;
+
       currentNode = currentNode.left;
-    
     }
 
     const chosenNode = currentNode.left;
     const chosenNodeRightTree = chosenNode.right;
 
     currentNode.left = chosenNodeRightTree;
-  
-    chosenNode.left = node.left;  
+
+    chosenNode.left = node.left;
     chosenNode.right = node.right;
 
-    if(smaller === true)
-      cursor.left = chosenNode;
-    else if(smaller === false)
-      cursor.right = chosenNode;
-    else
-      this.root = chosenNode;
-
+    if (smaller === true) cursor.left = chosenNode;
+    else if (smaller === false) cursor.right = chosenNode;
+    else this.root = chosenNode;
   }
 
-  isLeaf(node){
-    if(node.left === null && node.right === null) return true;
+  isLeaf(node) {
+    if (node.left === null && node.right === null) return true;
     return false;
   }
 }
