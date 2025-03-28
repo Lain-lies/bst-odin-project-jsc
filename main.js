@@ -158,39 +158,34 @@ class Tree {
 
   twoChildDeleteHelper(parent, nodeForDeletion, smaller) {
     print("two child helper");
-    let rightNode = nodeForDeletion.right;
+    const rightNode = nodeForDeletion.right;
 
     if (this.isLeaf(rightNode)) {
-
       rightNode.left = nodeForDeletion.left;
 
-      if(smaller === true)
-        parent.left = rightNode;
-      else if(smaller === false)
-        parent.right = rightNode
-      else
-        this.root = rightNode
-      
+      if (smaller === true) parent.left = rightNode;
+      else if (smaller === false) parent.right = rightNode;
+      else this.root = rightNode;
+
       return;
     }
 
-    while (true) {
-      if (currentNode.left.left === null) break;
+    let smallestNodeParent = rightNode;
+    let smallestNode = rightNode.left;
 
-      currentNode = currentNode.left;
+    while (smallestNode.left !== null) {
+      smallestNodeParent = smallestNode;
+      smallestNode = smallestNode.left;
     }
 
-    const chosenNode = currentNode.left;
-    const chosenNodeRightTree = chosenNode.right;
+    smallestNodeParent.left = smallestNode.right;
 
-    currentNode.left = chosenNodeRightTree;
+    smallestNode.left = nodeForDeletion.left;
+    smallestNode.right = nodeForDeletion.right;
 
-    chosenNode.left = node.left;
-    chosenNode.right = node.right;
-
-    if (smaller === true) cursor.left = chosenNode;
-    else if (smaller === false) cursor.right = chosenNode;
-    else this.root = chosenNode;
+    if (smaller === true) parent.left = smallestNode;
+    else if (smaller === false) parent.right = smallestNode;
+    else this.root = smallestNode;
   }
 
   isLeaf(node) {
