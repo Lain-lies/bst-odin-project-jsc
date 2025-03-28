@@ -27,7 +27,6 @@ class Tree {
 
   buildTree(array) {
     array = array.sort((a, b) => a - b);
-    print(array);
     this.root = this.buildTreeRecursiveHelper(array, 0, array.length - 1);
   }
 
@@ -79,50 +78,39 @@ class Tree {
 
   delete(value) {
     let cursor = this.getRoot();
-    let node = cursor;
-    let smaller;
-    let flag = true;
+    let cursorParent = this.getRoot();
+    let smaller = null;
+    let flag;
 
-    if (value === cursor.data) {
-      flag = false;
-      smaller = null;
-    }
+    // EARLY EXIT IF ROOT
+    cursor.data === value ? (flag = false) : (flag = true);
 
     while (flag) {
-      print("test");
-      if (cursor === null) {
-        print(null);
-        return null;
-      }
-
-      if (cursor.left !== null && cursor.left.data === value) {
-        node = cursor.left;
-        smaller = true;
-        print(1);
-        break;
-      } else if (cursor.right !== null && cursor.right.data === value) {
-        node = cursor.right;
-        smaller = false;
-        print(2);
+      if (cursor.data === value) {
+        value < cursorParent.data ? (smaller = true) : (smaller = false);
         break;
       }
 
-      if (value < cursor.data) cursor = cursor.left;
-      else cursor = cursor.right;
+      cursorParent = cursor;
+
+      value < cursor.data ? (cursor = cursor.left) : (cursor = cursor.right);
     }
 
-    switch (this.checkChildrenNum(node)) {
+    switch (this.checkChildrenNum(cursor)) {
       case 0:
-        this.noChildDeleteHelper(cursor, smaller);
+        this.noChildDeleteHelper(cursorParent, smaller);
         break;
 
       case 1:
-        this.oneChildDeleteHelper(cursor, node, smaller);
+        this.oneChildDeleteHelper(cursorParent, cursor, smaller);
         break;
 
       case 2:
-        this.twoChildDeleteHelper(cursor, node, smaller);
+        this.twoChildDeleteHelper(cursorParent, cursor, smaller);
         break;
+
+      default:
+        return null;
     }
   }
 
@@ -132,26 +120,23 @@ class Tree {
     if (node.left != null) n++;
     if (node.right != null) n++;
 
-    print(node);
-    print(`n is ${n}`);
     return n;
   }
 
-  noChildDeleteHelper(cursor, smaller) {
-    if (smaller) cursor.left = null;
-    else cursor.right = null;
+  noChildDeleteHelper(parent, smaller) {
+    smaller ? (parent.left = null) : (parent.right = null);
   }
 
-  oneChildDeleteHelper(cursor, node, smaller) {
-    let nodeChild = null;
-    print(cursor);
-    print(node);
+  oneChildDeleteHelper(parent, nodeForDeletion, smaller) {
+    let childOfDeletedNode;
 
-    if (node.left !== null) nodeChild = node.left;
-    else nodeChild = node.right;
+    nodeForDeletion.left !== null
+      ? (childOfDeletedNode = nodeForDeletion.left)
+      : (childOfDeletedNode = nodeForDeletion.right);
 
-    if (smaller) cursor.left = nodeChild;
-    else cursor.right = nodeChild;
+    if (smaller === true) parent.left = childOfDeletedNode;
+    else if (smaller === false) parent.right = childOfDeletedNode;
+    else this.root = childOfDeletedNode;
 
     return;
   }
@@ -193,11 +178,13 @@ class Tree {
     return false;
   }
 }
+
 const numbers = [50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85];
 
 const tree = new Tree();
 
 tree.buildTree(numbers);
 prettyPrint(tree.getRoot());
+print("----------------------------------------");
 tree.delete(50);
 prettyPrint(tree.getRoot());
