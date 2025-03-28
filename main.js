@@ -177,6 +177,20 @@ class Tree {
     if (node.left === null && node.right === null) return true;
     return false;
   }
+
+  find(value) {
+    let cursor = this.getRoot();
+    if (!cursor) return null;
+
+    while (cursor != null) {
+      if (value === cursor.data) return cursor;
+
+      print(cursor.data);
+      value < cursor.data  ? (cursor = cursor.left) : (cursor = cursor.right);
+    }
+
+    return null;
+  }
 }
 
 const numbers = [50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85];
@@ -186,5 +200,4 @@ const tree = new Tree();
 tree.buildTree(numbers);
 prettyPrint(tree.getRoot());
 print("----------------------------------------");
-tree.delete(50);
-prettyPrint(tree.getRoot());
+print(tree.find(60));
