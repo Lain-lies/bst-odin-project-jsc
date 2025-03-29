@@ -193,8 +193,8 @@ class Tree {
   }
 
   levelOrder(callback) {
+    if (callback === undefined) throw new Error("Callback function required");
     const queue = [this.getRoot()];
-
     while (queue.length != 0) {
       let current = queue[0];
       callback(current.data);
@@ -205,6 +205,48 @@ class Tree {
       queue.shift();
     }
   }
+
+  preOrder(callback) {
+    let root = this.getRoot();
+
+    function preOrderRecursiveHelper(node) {
+      if (node === null) return;
+
+      callback(node.data);
+      preOrderRecursiveHelper(node.left);
+      preOrderRecursiveHelper(node.right);
+    }
+
+    preOrderRecursiveHelper(root);
+  }
+
+  inOrder(callback) {
+    let root = this.getRoot();
+
+    function inOrderRecursiveHelper(node) {
+      if (node === null) return;
+
+      inOrderRecursiveHelper(node.left);
+      callback(node.data);
+      inOrderRecursiveHelper(node.right);
+    }
+
+    inOrderRecursiveHelper(root);
+  }
+
+  postOrder(callback) {
+    let root = this.getRoot();
+
+    function postOrderRecursiveHelper(node) {
+      if (node === null) return;
+
+      postOrderRecursiveHelper(node.left);
+      postOrderRecursiveHelper(node.right);
+      callback(node.data);
+    }
+
+    postOrderRecursiveHelper(root);
+  }
 }
 
 const numbers = [50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85];
@@ -213,4 +255,4 @@ const tree = new Tree();
 
 tree.buildTree(numbers);
 prettyPrint(tree.getRoot());
-tree.levelOrder();
+tree.postOrder(print);
