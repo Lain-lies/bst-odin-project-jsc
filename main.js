@@ -186,10 +186,24 @@ class Tree {
       if (value === cursor.data) return cursor;
 
       print(cursor.data);
-      value < cursor.data  ? (cursor = cursor.left) : (cursor = cursor.right);
+      value < cursor.data ? (cursor = cursor.left) : (cursor = cursor.right);
     }
 
     return null;
+  }
+
+  levelOrder(callback) {
+    const queue = [this.getRoot()];
+
+    while (queue.length != 0) {
+      let current = queue[0];
+      callback(current.data);
+
+      if (current.left != null) queue.push(current.left);
+      if (current.right != null) queue.push(current.right);
+
+      queue.shift();
+    }
   }
 }
 
@@ -199,5 +213,4 @@ const tree = new Tree();
 
 tree.buildTree(numbers);
 prettyPrint(tree.getRoot());
-print("----------------------------------------");
-print(tree.find(60));
+tree.levelOrder();
