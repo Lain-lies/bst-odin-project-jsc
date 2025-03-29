@@ -246,24 +246,43 @@ class Tree {
     postOrderRecursiveHelper(root);
   }
 
-  height(node){
+  height(node) {
+    if (!this.find(node.data)) throw new Error("Node not in tree");
+    if (node === null) return;
 
-    if(node === null) return;
-    
-    let left = 0, right = 0;
+    let left = 0,
+      right = 0;
 
-    if(node.left !== null){
+    if (node.left !== null) {
       left++;
       left += this.height(node.left);
     }
 
-    if(node.right !== null){
+    if (node.right !== null) {
       right++;
       right += this.height(node.right);
     }
 
     return left > right ? left : right;
-  
+  }
+
+  depth(node) {
+    if (!this.find(node.data)) throw new Error("Node not in tree");
+    if (node === null) return;
+
+    let cursor = this.getRoot();
+    let depth = 0;
+
+    while (true) {
+      if (cursor.data === node.data) break;
+
+      node.data < cursor.data
+        ? (cursor = cursor.left)
+        : (cursor = cursor.right);
+
+      depth++;
+    }
+    return depth;
   }
 }
 
@@ -274,3 +293,4 @@ const tree = new Tree();
 tree.buildTree(numbers);
 tree.insert(99);
 prettyPrint(tree.getRoot());
+print(tree.depth(tree.find(32)));
