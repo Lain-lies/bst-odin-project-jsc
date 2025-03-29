@@ -142,7 +142,6 @@ class Tree {
   }
 
   twoChildDeleteHelper(parent, nodeForDeletion, smaller) {
-    print("two child helper");
     const rightNode = nodeForDeletion.right;
 
     if (this.isLeaf(rightNode)) {
@@ -185,7 +184,6 @@ class Tree {
     while (cursor != null) {
       if (value === cursor.data) return cursor;
 
-      print(cursor.data);
       value < cursor.data ? (cursor = cursor.left) : (cursor = cursor.right);
     }
 
@@ -247,6 +245,26 @@ class Tree {
 
     postOrderRecursiveHelper(root);
   }
+
+  height(node){
+
+    if(node === null) return;
+    
+    let left = 0, right = 0;
+
+    if(node.left !== null){
+      left++;
+      left += this.height(node.left);
+    }
+
+    if(node.right !== null){
+      right++;
+      right += this.height(node.right);
+    }
+
+    return left > right ? left : right;
+  
+  }
 }
 
 const numbers = [50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85];
@@ -254,5 +272,5 @@ const numbers = [50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85];
 const tree = new Tree();
 
 tree.buildTree(numbers);
+tree.insert(99);
 prettyPrint(tree.getRoot());
-tree.postOrder(print);
