@@ -247,9 +247,7 @@ class Tree {
   }
 
   height(node) {
-    if (!this.find(node.data)) throw new Error("Node not in tree");
     if (node === null) return;
-
     let left = 0,
       right = 0;
 
@@ -284,6 +282,30 @@ class Tree {
     }
     return depth;
   }
+
+  isBalanced() {
+    const root = this.getRoot();
+    if (this.isLeaf(root)) return true;
+
+    let left = 0,
+      right = 0;
+    if (root.left !== null) left = this.height(root.left);
+    if (root.right !== null) right = this.height(root.right);
+
+    let balanced = left - right;
+
+    //turn to absolute value
+    if (balanced < 0) balanced *= -1;
+
+    return balanced > 1 ? false : true;
+  }
+
+  rebalance() {
+    if (this.isBalanced()) return;
+    const sorted = [];
+    this.preOrder((value) => sorted.push(value));
+    this.buildTree(sorted);
+  }
 }
 
 const numbers = [50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85];
@@ -291,6 +313,9 @@ const numbers = [50, 30, 20, 40, 32, 34, 36, 70, 60, 65, 80, 75, 85];
 const tree = new Tree();
 
 tree.buildTree(numbers);
-tree.insert(99);
+tree.insert(100);
+tree.insert(101);
+tree.insert(102);
 prettyPrint(tree.getRoot());
-print(tree.depth(tree.find(32)));
+tree.rebalance();
+prettyPrint(tree.getRoot());
